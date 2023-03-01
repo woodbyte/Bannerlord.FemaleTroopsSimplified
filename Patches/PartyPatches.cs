@@ -1,9 +1,6 @@
 ﻿using HarmonyLib;
 using System;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.CampaignSystem.Roster;
-using TaleWorlds.CampaignSystem.ViewModelCollection.CharacterDeveloper;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Party;
 using TaleWorlds.Core;
 
@@ -18,11 +15,10 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         static bool DisableCharacterPatch { get; set; } = false;
 
         [HarmonyPatch(typeof(PartyVM))]
-        [HarmonyPatch(MethodType.Constructor)]
-        [HarmonyPatch(new Type[] { typeof(Game), typeof(PartyScreenLogic), typeof(string), typeof(string) })]
+        [HarmonyPatch(nameof(PartyVM.PartyScreenLogic), MethodType.Setter)]
         class Patch01
         {
-            internal static void Prefix(Game game, PartyScreenLogic partyScreenLogic, string fiveStackShortcutkeyText, string entireStackShortcutkeyText)
+            internal static void Prefix()
             {
                 _seed = _random.Next();
             }
