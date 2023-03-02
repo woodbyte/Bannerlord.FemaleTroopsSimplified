@@ -12,8 +12,6 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         static Random _random = new();
         static int _seed;
 
-        static bool DisableCharacterPatch { get; set; } = false;
-
         [HarmonyPatch(typeof(PartyVM))]
         [HarmonyPatch(nameof(PartyVM.PartyScreenLogic), MethodType.Setter)]
         class Patch01
@@ -48,15 +46,11 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         {
             internal static void Prefix(PartyCharacterVM __instance, CharacterObject value)
             {
-                if (DisableCharacterPatch) return;
-
                 CharacterPatches.EnableGenderOverride(value, _seed + value.GetHashCode());
             }
 
             internal static void Postfix(PartyCharacterVM __instance)
             {
-                if (DisableCharacterPatch) return;
-
                 CharacterPatches.DisableGenderOverride();
             }
         }

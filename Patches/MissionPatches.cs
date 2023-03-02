@@ -46,6 +46,9 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
                 if (character.StringId.Contains("dignified_contender_")) return;
                 if (character.StringId.Contains("hardy_contender_")) return;
 
+                // ignore tutorial character ids
+                if (character.StringId.Contains("tutorial_npc_")) return;
+
                 IAgentOriginBase origin = agentBuildData.AgentOrigin;
                 if (origin == null) return;
 
