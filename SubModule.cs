@@ -1,4 +1,5 @@
 ﻿using Bannerlord.FemaleTroopsSimplified.Behaviors;
+using Bannerlord.FemaleTroopsSimplified.Configuration;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;

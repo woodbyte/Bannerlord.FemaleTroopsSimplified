@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using Bannerlord.FemaleTroopsSimplified.Configuration;
+using HarmonyLib;
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Items;
@@ -56,6 +57,30 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
             {
                 CharacterPatches.DisableGenderOverride();
                 DisableFullPagePatch = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(EncyclopediaUnitVM))]
+        [HarmonyPatch(MethodType.Constructor)]
+        [HarmonyPatch(new Type[] { typeof(CharacterObject), typeof(bool) })]
+        class Patch03
+        {
+            internal static void Prefix(out bool __state, CharacterObject character, bool isActive)
+            {
+                __state = CharacterPatches.GenderOverrideEnabled;
+
+                if (Settings.Instance == null) return;
+
+                if (CharacterPatches.GenderOverrideEnabled && Settings.Instance.GetCharacterCoverage(character) == 0)
+                {
+                    CharacterPatches.DisableGenderOverride();
+                }
+            }
+
+            internal static void Postfix(bool __state, CharacterObject character, bool isActive)
+            {
+                if (__state)
+                    CharacterPatches.EnableGenderOverride();
             }
         }
     }

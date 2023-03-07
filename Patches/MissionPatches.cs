@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using Bannerlord.FemaleTroopsSimplified.Configuration;
+using HarmonyLib;
 using SandBox.ViewModelCollection.Tournament;
 using System;
 using TaleWorlds.CampaignSystem;
@@ -26,28 +27,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
                 CharacterObject? character = agentBuildData.AgentCharacter as CharacterObject;
                 if (character == null) return;
 
-                switch (character.Occupation)
-                {
-                    case Occupation.Bandit:
-                    case Occupation.CaravanGuard:
-                    case Occupation.Gangster:
-                    case Occupation.Guard:
-                    case Occupation.Mercenary:
-                    case Occupation.PrisonGuard:
-                    case Occupation.Soldier:
-                        break;
-                    default:
-                        return;
-                }
-
-                // ignore spy quest character ids
-                if (character.StringId.Contains("bold_contender_")) return;
-                if (character.StringId.Contains("confident_contender_")) return;
-                if (character.StringId.Contains("dignified_contender_")) return;
-                if (character.StringId.Contains("hardy_contender_")) return;
-
-                // ignore tutorial character ids
-                if (character.StringId.Contains("tutorial_npc_")) return;
+                if (!Settings.GetCharacterIsValid(character, true)) return;
 
                 IAgentOriginBase origin = agentBuildData.AgentOrigin;
                 if (origin == null) return;

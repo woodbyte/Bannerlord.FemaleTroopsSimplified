@@ -1,4 +1,4 @@
-﻿using Bannerlord.FemaleTroopsSimplified.Patches;
+﻿using Bannerlord.FemaleTroopsSimplified.Configuration;
 using HarmonyLib;
 using Helpers;
 using System.Collections.Generic;
@@ -25,22 +25,32 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
             NativeOptions.OnNativeOptionsApplied += NativeOptions_OnNativeOptionsApplied;
         }
 
+        void Initialize()
+        {
+            Settings.Initialize();
+
+            LoadTroopRenames("ModuleData/base_troop_renames.xml");
+
+            if (Settings.Instance != null && Settings.Instance.UseGenderNeutral)
+            {
+                ApplyTroopRenames();
+            }
+        }
+
         public override void RegisterEvents()
         {
             CampaignEvents.OnGameLoadFinishedEvent.AddNonSerializedListener(this, () =>
             {
-                LoadTroopRenames("ModuleData/base_troop_renames.xml");
+                Initialize();
+            });
 
-                if (Settings.Instance != null && Settings.Instance.UseGenderNeutral)
-                {
-                    ApplyTroopRenames();
-                }
+            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, (cgs) =>
+            {
+                Initialize();
             });
         }
 
-        public override void SyncData(IDataStore dataStore)
-        {
-        }
+        public override void SyncData(IDataStore dataStore) { }
 
         private void NativeOptions_OnNativeOptionsApplied()
         {
@@ -86,13 +96,15 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
 
             if (_troopRenames == null) return;
 
+            if (Settings.Instance == null) return;
+
             var characters = CharacterObject.All;
 
             foreach (var character in characters)
             {
                 if (character.IsHero) continue;
 
-                if (!character.IsFemale && CharacterPatches.GetCultureCoverage(character.Culture.GetCultureCode()) == 0)
+                if (!character.IsFemale && Settings.Instance.GetCharacterCoverage(character) == 0)
                     continue;
 
                 if (_troopRenames.TryGetValue(character.StringId, out TroopRename rename))

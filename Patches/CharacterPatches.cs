@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using Bannerlord.FemaleTroopsSimplified.Configuration;
+using HarmonyLib;
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -11,53 +12,16 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         static Random _random = new();
         static bool _enableGenderOverride;
 
-        internal static int GetCultureCoverage(CultureCode cultureCode)
-        {
-            if (Settings.Instance == null) return 0;
+        internal static bool GenderOverrideEnabled => _enableGenderOverride;
 
-            int coverage = Settings.Instance.DefaultCoverage;
-
-            switch (cultureCode)
-            {
-                case CultureCode.Nord:
-                    if (Settings.Instance.SkolderbrodaToggle) coverage = Settings.Instance.SkolderbrodaCoverage;
-                    break;
-                case CultureCode.Darshi:
-                    if (Settings.Instance.GhilmanToggle) coverage = Settings.Instance.GhilmanCoverage;
-                    break;
-                case CultureCode.Vakken:
-                    if (Settings.Instance.ForestToggle) coverage = Settings.Instance.ForestCoverage;
-                    break;
-                case CultureCode.Aserai:
-                    if (Settings.Instance.AseraiToggle) coverage = Settings.Instance.AseraiCoverage;
-                    break;
-                case CultureCode.Battania:
-                    if (Settings.Instance.BattaniaToggle) coverage = Settings.Instance.BattaniaCoverage;
-                    break;
-                case CultureCode.Empire:
-                    if (Settings.Instance.EmpireToggle) coverage = Settings.Instance.EmpireCoverage;
-                    break;
-                case CultureCode.Khuzait:
-                    if (Settings.Instance.KhuzaitToggle) coverage = Settings.Instance.KhuzaitCoverage;
-                    break;
-                case CultureCode.Sturgia:
-                    if (Settings.Instance.SturgiaToggle) coverage = Settings.Instance.SturgiaCoverage;
-                    break;
-                case CultureCode.Vlandia:
-                    if (Settings.Instance.VlandiaToggle) coverage = Settings.Instance.VlandiaCoverage;
-                    break;
-            }
-
-            return coverage;
-        }
-
-        internal static bool GetCharacterIsFemale(CharacterObject character, int seed = -1)
+        internal static bool GetRandomCharacterOverride(CharacterObject character, int seed = -1)
         {
             if (character.IsHero) return false;
+            if (character.IsFemale) return false;
 
             if (Settings.Instance == null) return false;
 
-            int coverage = GetCultureCoverage(character.Culture.GetCultureCode());
+            int coverage = Settings.Instance.GetCharacterCoverage(character);
 
             Random rand = _random;
             if (seed != -1)
@@ -68,7 +32,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
 
         internal static void EnableGenderOverride(CharacterObject character, int seed = -1)
         {
-            _enableGenderOverride = GetCharacterIsFemale(character, seed);
+            _enableGenderOverride = GetRandomCharacterOverride(character, seed);
         }
 
         internal static void EnableGenderOverride()
