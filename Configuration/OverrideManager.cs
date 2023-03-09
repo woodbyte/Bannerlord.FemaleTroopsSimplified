@@ -22,21 +22,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
 
                 CharacterObject overrideCharacter;
 
-                if (character.IsBasicTroop)
-                    overrideCharacter = character;
-                else
-                {
-                    var root = FindUpgradeRootOf(character, true);
-
-                    if (root != character)
-                        overrideCharacter = root;
-                    else
-                    {
-                        root = FindUpgradeRootOf(character, false);
-
-                        overrideCharacter = root;
-                    }
-                }
+                overrideCharacter = GetCharacterRoot(character);
 
                 var culture = overrideCharacter.Culture;
 
@@ -50,6 +36,52 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
                 var characterOverride = cultureOverride.AddTroopOverride(overrideCharacter);
 
                 _characterOverrides.Add(character, characterOverride);
+            }
+        }
+
+        static CharacterObject GetCharacterRoot(CharacterObject character)
+        {
+            var roots = new List<CharacterObject>();
+
+            FindAllCharacterRoots(character, roots);
+
+            roots.Sort((x, y) =>
+            {
+                if (x.IsBasicTroop && !y.IsBasicTroop) return -1;
+                else if (!x.IsBasicTroop && y.IsBasicTroop) return 1;
+                else return x.Tier - y.Tier;
+            });
+
+            return roots[0];
+        }
+
+        static void FindAllCharacterRoots(CharacterObject character, List<CharacterObject> roots, CharacterObject? searchStart = null, CharacterObject? searchCurrent = null)
+        {
+            if (searchStart == null)
+            {
+                roots.Add(character); // add self
+
+                foreach (CharacterObject rootCharacter in CharacterObject.All)
+                {
+                    if (!Settings.GetCharacterIsValid(rootCharacter)) continue;
+
+                    FindAllCharacterRoots(character, roots, rootCharacter, rootCharacter);
+                }
+
+                return;
+            }
+
+            if (searchCurrent == null) return;
+
+            foreach (var upgrade in searchCurrent.UpgradeTargets)
+            {
+                if (upgrade == character)
+                {
+                    roots.Add(searchStart);
+                    return;
+                }
+
+                FindAllCharacterRoots(character, roots, searchStart, upgrade);
             }
         }
 
@@ -86,42 +118,6 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
             {
                 cultureOverride.CreatePreset(builder, presetName);
             }
-        }
-
-        public static CharacterObject FindUpgradeRootOf(CharacterObject character, bool basicTroopOnly = false)
-        {
-            foreach (CharacterObject item in CharacterObject.All)
-            {
-                if ((item.IsBasicTroop || !basicTroopOnly) && UpgradeTreeContains(item, item, character))
-                {
-                    return item;
-                }
-            }
-
-            return character;
-        }
-
-        private static bool UpgradeTreeContains(CharacterObject rootTroop, CharacterObject baseTroop, CharacterObject character)
-        {
-            if (baseTroop == character)
-            {
-                return true;
-            }
-
-            for (int i = 0; i < baseTroop.UpgradeTargets.Length; i++)
-            {
-                if (baseTroop.UpgradeTargets[i] == rootTroop)
-                {
-                    return false;
-                }
-
-                if (UpgradeTreeContains(rootTroop, baseTroop.UpgradeTargets[i], character))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 }

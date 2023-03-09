@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<renames>
+  <rename original="Tribesman" new="Tribal Warrior" />
+  <rename original="Footman" new="Foot Soldier" />
+  <rename original="Spearman" new="Spear" />
+  <rename original="Falxman" new="Falx" />
+  <rename original="Swordsman" new="Sword" />
+  <rename original="Pikeman" new="Pike" />
+  <rename original="Billman" new="Bill" />
+  <rename original="Woodsman" new="Wood Runner" />
+  <rename original="Maceman" new="Mace" />
+  <rename original="Axeman" new="Axe" />
+  <rename original="Horseman" new="Horserider" />
+  <rename original="Infantryman" new="Infantry" />
+  <rename original="Crossbowman" new="Crossbow" />
+  <rename original="Longbowman" new="Longbow" />
+  <rename original="Bowman" new="Bow" />
+  <rename original="Broda" new="" />
+  <rename original="Son" new="Youth" />
+  <rename original="Hillman" new="Hill Bandit" />
+  <rename original="Highwayman" new="Highway Marauder" />
+</renames>

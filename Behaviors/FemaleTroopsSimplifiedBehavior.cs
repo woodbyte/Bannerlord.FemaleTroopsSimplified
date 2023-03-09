@@ -12,13 +12,20 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
 {
     internal class FemaleTroopsSimplifiedBehavior : CampaignBehaviorBase
     {
-        internal struct TroopRename
+        internal class TroopRename
         {
             public string Original;
             public string New;
+
+            public TroopRename(string original, string @new)
+            {
+                Original = original;
+                New = @new;
+            }
         }
 
-        private Dictionary<string, TroopRename>? _troopRenames;
+        private List<TroopRename>? _renames;
+        private Dictionary<CharacterObject, string>? _reverts;
 
         public FemaleTroopsSimplifiedBehavior()
         {
@@ -29,7 +36,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
         {
             Settings.Initialize();
 
-            LoadTroopRenames("ModuleData/base_troop_renames.xml");
+            LoadTroopRenames("ModuleData/common_troop_renames.xml");
 
             if (Settings.Instance != null && Settings.Instance.UseGenderNeutral)
             {
@@ -50,7 +57,76 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
             });
         }
 
-        public override void SyncData(IDataStore dataStore) { }
+        internal void LoadTroopRenames(string path)
+        {
+            _renames = new();
+
+            var modulePath = Utilities.GetFullModulePath("Bannerlord.FemaleTroopsSimplified");
+            var xmlFile = MiscHelper.LoadXmlFile(modulePath + path);
+
+            var nodes = xmlFile.SelectNodes("renames/rename");
+
+            foreach (XmlNode node in nodes)
+            {
+                string? original = node.Attributes["original"]?.Value;
+                string? @new = node.Attributes["new"]?.Value;
+
+                if (original == null || original == "")
+                    continue;
+
+                if (@new == null || @new == "")
+                    continue;
+
+                _renames.Add(new(original, @new));
+            }
+        }
+
+        internal void ApplyTroopRenames()
+        {
+            AccessTools.FieldRef<TextObject, string> textObjectValue =
+                AccessTools.FieldRefAccess<TextObject, string>("Value");
+
+            if (_renames == null) return;
+
+            if (Settings.Instance == null) return;
+
+            _reverts = new();
+
+            foreach (var character in CharacterObject.All)
+            {
+                if (character.IsHero) continue;
+
+                if (!character.IsFemale && Settings.Instance.GetCharacterCoverage(character) == 0)
+                    continue;
+
+                string name = textObjectValue(character.Name);
+
+                var rename = _renames.Find((x) => name.Contains(x.Original));
+
+                if (rename == null) continue;
+
+                _reverts.Add(character, name);
+
+                textObjectValue(character.Name) = name.Replace(rename.Original, rename.New);
+                character.Name.CacheTokens();
+            }
+        }
+
+        internal void RevertTroopRenames()
+        {
+            AccessTools.FieldRef<TextObject, string> textObjectValue =
+                AccessTools.FieldRefAccess<TextObject, string>("Value");
+
+            if (_reverts == null) return;
+
+            foreach (var revert in _reverts)
+            {
+                textObjectValue(revert.Key.Name) = revert.Value;
+                revert.Key.Name.CacheTokens();
+            }
+
+            _reverts = null;
+        }
 
         private void NativeOptions_OnNativeOptionsApplied()
         {
@@ -62,91 +138,6 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
                 ApplyTroopRenames();
         }
 
-        internal void RevertTroopRenames()
-        {
-            AccessTools.FieldRef<TextObject, string> textObjectValue =
-                AccessTools.FieldRefAccess<TextObject, string>("Value");
-
-            if (_troopRenames == null) return;
-
-            var characters = CharacterObject.All;
-
-            foreach (var character in characters)
-            {
-                if (character.IsHero) continue;
-
-                if (_troopRenames.TryGetValue(character.StringId, out TroopRename rename))
-                {
-                    string name = textObjectValue(character.Name);
-
-                    if (name == rename.New)
-                    {
-                        textObjectValue(character.Name) = rename.Original;
-                    }
-
-                    character.Name.CacheTokens();
-                }
-            }
-        }
-
-        internal void ApplyTroopRenames()
-        {
-            AccessTools.FieldRef<TextObject, string> textObjectValue =
-                AccessTools.FieldRefAccess<TextObject, string>("Value");
-
-            if (_troopRenames == null) return;
-
-            if (Settings.Instance == null) return;
-
-            var characters = CharacterObject.All;
-
-            foreach (var character in characters)
-            {
-                if (character.IsHero) continue;
-
-                if (!character.IsFemale && Settings.Instance.GetCharacterCoverage(character) == 0)
-                    continue;
-
-                if (_troopRenames.TryGetValue(character.StringId, out TroopRename rename))
-                {
-                    string name = textObjectValue(character.Name);
-
-                    if (name == rename.Original)
-                    {
-                        textObjectValue(character.Name) = rename.New;
-                    }
-
-                    character.Name.CacheTokens();
-                }
-            }
-        }
-
-        internal void LoadTroopRenames(string path)
-        {
-            _troopRenames = new();
-
-            var modulePath = Utilities.GetFullModulePath("Bannerlord.FemaleTroopsSimplified");
-            var xmlFile = MiscHelper.LoadXmlFile(modulePath + path);
-
-            var nodes = xmlFile.SelectNodes("renames/rename");
-
-            foreach (XmlNode node in nodes)
-            {
-                string? id = node.Attributes["id"]?.Value;
-                string? original = node.Attributes["original"]?.Value;
-                string? @new = node.Attributes["new"]?.Value;
-
-                if (id == null || id == "")
-                    continue;
-
-                if (original == null || original == "")
-                    continue;
-
-                if (@new == null || @new == "")
-                    continue;
-
-                _troopRenames[id] = new() { Original = original, New = @new };
-            }
-        }
+        public override void SyncData(IDataStore dataStore) { }
     }
 }
