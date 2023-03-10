@@ -26,7 +26,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
             var upperId = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(lowerId);
             SettingId = upperId.Replace(" ", String.Empty);
 
-            if (!Settings.BaseTreesArePresent) return;
+            if (!CampaignSettings.BaseTreesArePresent) return;
 
             if (SettingId == "SkolderbrotvaTier1" || SettingId == "GhilmanTier1")
             {
@@ -37,9 +37,9 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
 
         public int GetFinalCoverage()
         {
-            if (Settings.Instance == null) return 0;
+            if (CampaignSettings.Instance == null) return 0;
 
-            int coverage = Settings.Instance.DefaultCoverage;
+            int coverage = CampaignSettings.Instance.DefaultCoverage;
 
             if (_parent.Enabled)
             {

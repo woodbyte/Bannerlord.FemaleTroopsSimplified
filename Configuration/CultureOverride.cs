@@ -30,7 +30,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
             var upperId = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(lowerId);
             SettingId = upperId.Replace(" ", String.Empty);
 
-            if (!Settings.BaseTreesArePresent) return;
+            if (!CampaignSettings.BaseTreesArePresent) return;
 
             if (SettingId == "Nord" || SettingId == "Darshi")
             {

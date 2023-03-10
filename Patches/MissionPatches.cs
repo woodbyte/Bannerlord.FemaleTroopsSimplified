@@ -8,6 +8,7 @@ using TaleWorlds.CampaignSystem.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.CustomBattle;
 
 namespace Bannerlord.FemaleTroopsSimplified.Patches
 {
@@ -21,22 +22,33 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
             internal static void Prefix(Mission __instance, AgentBuildData agentBuildData)
             {
                 if (agentBuildData.AgentCharacter == null) return;
-
                 if (agentBuildData.AgentCharacter.IsHero) return;
 
-                CharacterObject? character = agentBuildData.AgentCharacter as CharacterObject;
-                if (character == null) return;
+                if (Game.Current.GameType is CustomGame)
+                {
+                    if (GlobalSettings.Instance == null) return;
 
-                if (!Settings.GetCharacterIsValid(character, true)) return;
+                    CharacterPatches.EnableGenderOverride(GlobalSettings.Instance.CustomCoverage, agentBuildData.AgentOrigin.Seed);
+                    return;
+                }
 
-                IAgentOriginBase origin = agentBuildData.AgentOrigin;
-                if (origin == null) return;
+                if (Game.Current.GameType is Campaign)
+                {
+                    CharacterObject? character = agentBuildData.AgentCharacter as CharacterObject;
+                    if (character == null) return;
 
-                int seed = origin.Seed;
-                if (origin is SimpleAgentOrigin && origin.UniqueSeed != 0)
-                    seed = origin.UniqueSeed;
+                    if (!CampaignSettings.GetCharacterIsValid(character, true)) return;
 
-                CharacterPatches.EnableGenderOverride(character, seed);
+                    IAgentOriginBase origin = agentBuildData.AgentOrigin;
+                    if (origin == null) return;
+
+                    int seed = origin.Seed;
+                    if (origin is SimpleAgentOrigin && origin.UniqueSeed != 0)
+                        seed = origin.UniqueSeed;
+
+                    CharacterPatches.EnableGenderOverride(character, seed);
+                    return;
+                }
             }
 
             internal static void Postfix(Mission __instance, AgentBuildData agentBuildData)

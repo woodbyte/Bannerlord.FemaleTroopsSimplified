@@ -22,8 +22,8 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
             {
                 if (DisableFullPagePatch) return;
 
-                if (Settings.Instance == null) return;
-                if (!Settings.Instance.RandomizeEncyclopedia) return;
+                if (CampaignSettings.Instance == null) return;
+                if (!CampaignSettings.Instance.RandomizeEncyclopedia) return;
 
                 CharacterObject? character = args.Obj as CharacterObject;
                 if (character == null) return;
@@ -69,9 +69,9 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
             {
                 __state = CharacterPatches.GenderOverrideEnabled;
 
-                if (Settings.Instance == null) return;
+                if (CampaignSettings.Instance == null) return;
 
-                if (CharacterPatches.GenderOverrideEnabled && Settings.Instance.GetCharacterCoverage(character) == 0)
+                if (CharacterPatches.GenderOverrideEnabled && CampaignSettings.Instance.GetCharacterCoverage(character) == 0)
                 {
                     CharacterPatches.DisableGenderOverride();
                 }

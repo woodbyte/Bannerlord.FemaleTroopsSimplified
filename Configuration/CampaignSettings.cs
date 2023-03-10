@@ -5,10 +5,10 @@ using TaleWorlds.CampaignSystem;
 
 namespace Bannerlord.FemaleTroopsSimplified.Configuration
 {
-    internal class Settings
+    internal class CampaignSettings
     {
         public static bool BaseTreesArePresent { get; private set; } = false;
-        public static Settings? Instance { get; private set; }
+        public static CampaignSettings? Instance { get; private set; }
 
         OverrideManager? _overrideManager;
         ISettingsBuilder? _builder;
@@ -16,6 +16,53 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
         public int DefaultCoverage { get; set; } = 50;
         public bool UseGenderNeutral { get; set; } = true;
         public bool RandomizeEncyclopedia { get; set; } = true;
+
+        public static bool GetCharacterIsConfigurable(CharacterObject character)
+        {
+            if (!GetCharacterIsValid(character)) return false;
+
+            var culture = character.Culture;
+            if (culture == null) return false;
+
+            if (GlobalSettings.Instance == null) return false;
+
+            if (!GlobalSettings.Instance.EnableHiddenConfig && character.HiddenInEncylopedia) return false;
+
+            if (!GlobalSettings.Instance.EnableCaravanConfig)
+            {
+                if (culture.CaravanGuard == character) return false;
+                if (culture.CaravanMaster == character) return false;
+                if (culture.CaravanPartyTemplate != null &&
+                    culture.CaravanPartyTemplate.Stacks != null &&
+                    culture.CaravanPartyTemplate.Stacks.Any((x) => x.Character == character)) return false;
+                if (culture.EliteCaravanPartyTemplate != null &&
+                    culture.EliteCaravanPartyTemplate.Stacks != null &&
+                    culture.EliteCaravanPartyTemplate.Stacks.Any((x) => x.Character == character)) return false;
+            }
+
+            if (!GlobalSettings.Instance.EnableMilitiaConfig)
+            {
+                if (culture.RangedMilitiaTroop == character) return false;
+                if (culture.MeleeMilitiaTroop == character) return false;
+                if (culture.RangedEliteMilitiaTroop == character) return false;
+                if (culture.MeleeEliteMilitiaTroop == character) return false;
+                if (culture.MilitiaArcher == character) return false;
+                if (culture.MilitiaSpearman == character) return false;
+                if (culture.MilitiaVeteranArcher == character) return false;
+                if (culture.MilitiaVeteranSpearman == character) return false;
+                if (culture.MilitiaPartyTemplate != null &&
+                    culture.MilitiaPartyTemplate.Stacks != null &&
+                    culture.MilitiaPartyTemplate.Stacks.Any((x) => x.Character == character)) return false;
+            }
+
+            if (!GlobalSettings.Instance.EnableGuardConfig)
+            {
+                if (culture.Guard == character) return false;
+                if (culture.PrisonGuard == character) return false;
+            }
+
+            return true;
+        }
 
         public static bool GetCharacterIsValid(CharacterObject character, bool includeObsolete = false)
         {
@@ -63,18 +110,19 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
 
             if (nordUnit != null && darshiUnit != null)
             {
-                if (nordUnit.Culture.StringId == "nord" && darshiUnit.Culture.StringId == "darshi")
+                if (nordUnit.Culture.StringId == "nord" && darshiUnit.Culture.StringId == "darshi" &&
+                    !nordUnit.HiddenInEncylopedia && !darshiUnit.HiddenInEncylopedia)
                     BaseTreesArePresent = true;
             }
 
-            Instance = new Settings();
+            Instance = new CampaignSettings();
         }
 
-        public Settings()
+        public CampaignSettings()
         {
             _overrideManager = new OverrideManager();
 
-            _builder = BaseSettingsBuilder.Create("FemaleTroopsSimplified", $"Female Troops Simplified {typeof(Settings).Assembly.GetName().Version.ToString(3)}");
+            _builder = BaseSettingsBuilder.Create("FemaleTroopsSimplified", $"Female Troops Simplified {typeof(CampaignSettings).Assembly.GetName().Version.ToString(3)}");
 
             if (_builder == null) return;
 

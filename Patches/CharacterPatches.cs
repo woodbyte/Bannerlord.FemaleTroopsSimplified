@@ -19,9 +19,9 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
             if (character.IsHero) return false;
             if (character.IsFemale) return false;
 
-            if (Settings.Instance == null) return false;
+            if (CampaignSettings.Instance == null) return false;
 
-            int coverage = Settings.Instance.GetCharacterCoverage(character);
+            int coverage = CampaignSettings.Instance.GetCharacterCoverage(character);
 
             Random rand = _random;
             if (seed != -1)
@@ -38,6 +38,16 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         internal static void EnableGenderOverride()
         {
             _enableGenderOverride = true;
+        }
+
+        internal static void EnableGenderOverride(int coverage, int seed = -1)
+        {
+            Random rand = _random;
+            if (seed != -1)
+                rand = new(seed);
+
+            if (rand.NextDouble() < coverage / 100f)
+                _enableGenderOverride = true;
         }
 
         internal static void DisableGenderOverride()

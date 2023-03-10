@@ -18,7 +18,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
 
             foreach (var character in CharacterObject.All)
             {
-                if (!Settings.GetCharacterIsValid(character)) continue;
+                if (!CampaignSettings.GetCharacterIsConfigurable(character)) continue;
 
                 CharacterObject overrideCharacter;
 
@@ -63,7 +63,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
 
                 foreach (CharacterObject rootCharacter in CharacterObject.All)
                 {
-                    if (!Settings.GetCharacterIsValid(rootCharacter)) continue;
+                    if (!CampaignSettings.GetCharacterIsConfigurable(rootCharacter)) continue;
 
                     FindAllCharacterRoots(character, roots, rootCharacter, rootCharacter);
                 }
@@ -96,9 +96,9 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
                 if (cultureOverride.Enabled && cultureOverride.CoverageEnabled)
                     return cultureOverride.CoverageValue;
 
-            if (Settings.Instance == null) return 0;
+            if (CampaignSettings.Instance == null) return 0;
 
-            return Settings.Instance.DefaultCoverage;
+            return CampaignSettings.Instance.DefaultCoverage;
         }
 
         public void CreateGroups(ISettingsBuilder builder, int startingOrder)

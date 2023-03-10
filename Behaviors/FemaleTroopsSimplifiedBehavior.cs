@@ -12,6 +12,19 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
 {
     internal class FemaleTroopsSimplifiedBehavior : CampaignBehaviorBase
     {
+        internal static FemaleTroopsSimplifiedBehavior? _instance;
+
+        public static void Clean()
+        {
+            if (_instance == null) return;
+
+            _instance.RemoveOptionsHandler();
+            _instance._renames = null;
+            _instance._reverts = null;
+
+            _instance = null;
+        }
+
         internal class TroopRename
         {
             public string Original;
@@ -30,15 +43,17 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
         public FemaleTroopsSimplifiedBehavior()
         {
             NativeOptions.OnNativeOptionsApplied += NativeOptions_OnNativeOptionsApplied;
+
+            _instance = this;
         }
 
         void Initialize()
         {
-            Settings.Initialize();
+            CampaignSettings.Initialize();
 
             LoadTroopRenames("ModuleData/common_troop_renames.xml");
 
-            if (Settings.Instance != null && Settings.Instance.UseGenderNeutral)
+            if (CampaignSettings.Instance != null && CampaignSettings.Instance.UseGenderNeutral)
             {
                 ApplyTroopRenames();
             }
@@ -88,7 +103,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
 
             if (_renames == null) return;
 
-            if (Settings.Instance == null) return;
+            if (CampaignSettings.Instance == null) return;
 
             _reverts = new();
 
@@ -96,7 +111,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
             {
                 if (character.IsHero) continue;
 
-                if (!character.IsFemale && Settings.Instance.GetCharacterCoverage(character) == 0)
+                if (!character.IsFemale && CampaignSettings.Instance.GetCharacterCoverage(character) == 0)
                     continue;
 
                 string name = textObjectValue(character.Name);
@@ -130,12 +145,17 @@ namespace Bannerlord.FemaleTroopsSimplified.Behaviors
 
         private void NativeOptions_OnNativeOptionsApplied()
         {
-            if (Settings.Instance == null) return;
+            if (CampaignSettings.Instance == null) return;
 
             RevertTroopRenames();
 
-            if (Settings.Instance.UseGenderNeutral)
+            if (CampaignSettings.Instance.UseGenderNeutral)
                 ApplyTroopRenames();
+        }
+
+        private void RemoveOptionsHandler()
+        {
+            NativeOptions.OnNativeOptionsApplied -= NativeOptions_OnNativeOptionsApplied;
         }
 
         public override void SyncData(IDataStore dataStore) { }
