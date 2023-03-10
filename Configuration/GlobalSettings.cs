@@ -20,7 +20,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
 
         public GlobalSettings()
         {
-            _builder = BaseSettingsBuilder.Create("FemaleTroopsSimplifiedGlobal", $"Female Troops Simplified {typeof(CampaignSettings).Assembly.GetName().Version.ToString(3)}");
+            _builder = BaseSettingsBuilder.Create("FemaleTroopsSimplifiedGlobals", $"Female Troops Simplified {typeof(CampaignSettings).Assembly.GetName().Version.ToString(3)}");
 
             if (_builder == null) return;
 
@@ -33,7 +33,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
                 .AddInteger("CustomCoverage", "Custom Battle Female Percentage", 0, 100, new ProxyRef<int>(() => CustomCoverage, x => CustomCoverage = x), integerBuilder => integerBuilder
                     .SetOrder(0)));
 
-            _builder.CreateGroup("Campaigm", groupBuilder => groupBuilder
+            _builder.CreateGroup("Campaign and Sandbox", groupBuilder => groupBuilder
                 .SetGroupOrder(1)
                 .AddBool("EnableMilitiaConfig", "Enable Militia Customization", new ProxyRef<bool>(() => EnableMilitiaConfig, x => EnableMilitiaConfig = x), boolBuilder => boolBuilder
                     .SetOrder(0))
