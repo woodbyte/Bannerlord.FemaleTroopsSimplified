@@ -4,7 +4,9 @@ using SandBox.ViewModelCollection.Tournament;
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.AgentOrigins;
+using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.TournamentGames;
+using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.TroopSelection;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -95,6 +97,24 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
             {
                 CharacterPatches.DisableGenderOverride();
                 EncyclopediaPatches.DisableFullPagePatch = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(TroopSelectionItemVM))]
+        [HarmonyPatch(MethodType.Constructor)]
+        [HarmonyPatch(new Type[] { typeof(TroopRosterElement), typeof(Action<TroopSelectionItemVM>), typeof(Action<TroopSelectionItemVM>) })]
+        class Patch04
+        {
+            internal static void Prefix(TroopRosterElement troop, Action<TroopSelectionItemVM> onAdd, Action<TroopSelectionItemVM> onRemove)
+            {
+                if (troop.Character == null) return;
+
+                CharacterPatches.EnableGenderOverride(troop.Character);
+            }
+
+            internal static void Postfix(TroopRosterElement troop, Action<TroopSelectionItemVM> onAdd, Action<TroopSelectionItemVM> onRemove)
+            {
+                CharacterPatches.DisableGenderOverride();
             }
         }
     }
