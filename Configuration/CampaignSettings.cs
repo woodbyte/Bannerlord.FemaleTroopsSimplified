@@ -64,11 +64,11 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
             return true;
         }
 
-        public static bool GetCharacterIsValid(CharacterObject character, bool includeObsolete = false)
+        public static bool GetCharacterIsValid(CharacterObject character, bool includeObsolete = false, bool includeFemales = false)
         {
             if (character.IsObsolete && !includeObsolete) return false;
             if (character.IsHero) return false;
-            if (character.IsFemale) return false;
+            if (character.IsFemale && !includeFemales) return false;
 
             switch (character.Occupation)
             {

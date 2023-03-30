@@ -1,14 +1,17 @@
 ﻿using Bannerlord.FemaleTroopsSimplified.Configuration;
 using HarmonyLib;
 using SandBox.ViewModelCollection.Tournament;
+using StoryMode.GameComponents;
 using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.AgentOrigins;
+using TaleWorlds.CampaignSystem.Conversation;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.TournamentGames;
 using TaleWorlds.CampaignSystem.ViewModelCollection.GameMenu.TroopSelection;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.CustomBattle;
 
@@ -17,6 +20,8 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
     [HarmonyPatch]
     class MissionPatches
     {
+        static bool ProcessingSentence { get; set; } = false;
+
         [HarmonyPatch(typeof(Mission))]
         [HarmonyPatch(nameof(Mission.SpawnAgent))]
         class Patch01
@@ -115,6 +120,52 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
             internal static void Postfix(TroopRosterElement troop, Action<TroopSelectionItemVM> onAdd, Action<TroopSelectionItemVM> onRemove)
             {
                 CharacterPatches.DisableGenderOverride();
+            }
+        }
+
+        [HarmonyPatch(typeof(ConversationManager))]
+        [HarmonyPatch(nameof(ConversationManager.ProcessSentence))]
+        class Patch05
+        {
+            internal static void Prefix(ConversationSentenceOption conversationSentenceOption)
+            {
+                if (Game.Current == null) return;
+
+                ProcessingSentence = true;
+            }
+
+            internal static void Postfix(ConversationSentenceOption conversationSentenceOption)
+            {
+                ProcessingSentence = false;
+
+                CharacterPatches.DisableGenderOverride();
+            }
+        }
+
+        [HarmonyPatch(typeof(ConversationManager))]
+        [HarmonyPatch("UpdateSpeakerAndListenerAgents")]
+        class Patch06
+        {
+            internal static void Postfix(ConversationManager __instance, ConversationSentence sentence)
+            {
+                if (ProcessingSentence)
+                {
+                    if (__instance.SpeakerAgent != null && __instance.SpeakerAgent is Agent agent && agent.IsFemale)
+                        CharacterPatches.EnableGenderOverride();
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(StoryModeVoiceOverModel))]
+        [HarmonyPatch(nameof(StoryModeVoiceOverModel.GetSoundPathForCharacter))]
+        class Patch07
+        {
+            internal static void Postfix(ref string __result, CharacterObject character, VoiceObject voiceObject)
+            {
+                if (character.IsFemale && CampaignSettings.GetCharacterIsValid(character, includeFemales: true))
+                {
+                    __result = "";
+                }
             }
         }
     }
