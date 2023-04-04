@@ -45,6 +45,8 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         {
             internal static void Prefix(EncyclopediaUnitVM __instance)
             {
+                if (__instance.ImageIdentifier == null || __instance.ImageIdentifier.Id == "") return;
+
                 DisableFullPagePatch = true;
 
                 CharacterCode code = CharacterCode.CreateFrom(__instance.ImageIdentifier.Id);

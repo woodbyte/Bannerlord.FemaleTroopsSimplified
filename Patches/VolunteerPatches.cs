@@ -35,7 +35,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         {
             internal static void Prefix(RecruitVolunteerTroopVM __instance)
             {
-                if (__instance.ImageIdentifier == null) return;
+                if (__instance.ImageIdentifier == null || __instance.ImageIdentifier.Id == "") return;
 
                 EncyclopediaPatches.DisableFullPagePatch = true;
 

@@ -90,6 +90,8 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         {
             internal static void Prefix(TournamentParticipantVM __instance)
             {
+                if (__instance.Visual == null || __instance.Visual.Id == "") return;
+
                 EncyclopediaPatches.DisableFullPagePatch = true;
 
                 CharacterCode code = CharacterCode.CreateFrom(__instance.Visual.Id);

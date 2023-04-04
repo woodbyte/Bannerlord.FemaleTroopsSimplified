@@ -76,7 +76,7 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         {
             internal static void Prefix(ClanPartyItemVM __instance)
             {
-                if (__instance.LeaderVisual == null) return;
+                if (__instance.LeaderVisual == null || __instance.LeaderVisual.Id == "") return;
 
                 var code = CharacterCode.CreateFrom(__instance.LeaderVisual.Id);
 

@@ -28,6 +28,8 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         {
             internal static void Prefix(PartyVM __instance, PartyCharacterVM value)
             {
+                if (value.Code == null || value.Code.Id == "") return;
+
                 CharacterCode code = CharacterCode.CreateFrom(value.Code.Id);
 
                 if (code.IsFemale)
@@ -61,6 +63,8 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         {
             internal static void Prefix(PartyCharacterVM __instance)
             {
+                if (__instance.Code == null || __instance.Code.Id == "") return;
+
                 EncyclopediaPatches.DisableFullPagePatch = true;
 
                 CharacterCode code = CharacterCode.CreateFrom(__instance.Code.Id);
@@ -82,6 +86,8 @@ namespace Bannerlord.FemaleTroopsSimplified.Patches
         {
             internal static void Prefix(UpgradeTargetVM __instance)
             {
+                if (__instance.TroopImage == null || __instance.TroopImage.Id == "") return;
+
                 EncyclopediaPatches.DisableFullPagePatch = true;
 
                 CharacterCode code = CharacterCode.CreateFrom(__instance.TroopImage.Id);
