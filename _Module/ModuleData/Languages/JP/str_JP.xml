@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base>
+ <tags>
+  <tag language="日本語"/>
+ </tags>
+ <strings>
+  <string id="FTSOptG001" text="全般"/>
+  <string id="FTSOptG002" text="カスタムバトル"/>
+  <string id="FTSOptG003" text="キャンペーンとサンドボックス"/>
+  <string id="FTSOptG004" text="{NAME}"/>
+  <string id="FTSOptG005" text="女性率の上書きを有効"/>
+  <string id="FTSOptG006" text="カスタマイズ"/>
+  <string id="FTSOpt001" text="デフォルトの女性率 (%)"/>
+  <string id="FTSOpt002" text="ジェンダーニュートラルな名称を使用"/>
+  <string id="FTSOpt002Hint" text="言語設定が英語のときのみ動作します。"/>
+  <string id="FTSOpt003" text="百科事典で表示される兵士の性別をランダムにする"/>
+  <string id="FTSOpt004" text="切り替え"/>
+  <string id="FTSOpt005" text="カスタムバトルでの女性率 (%)"/>
+  <string id="FTSOpt006" text="市民兵の変更を有効"/>
+  <string id="FTSOpt007" text="隊商の変更を有効"/>
+  <string id="FTSOpt008" text="護衛兵の変更を有効"/>
+  <string id="FTSOpt009" text="隠し兵の変更を有効"/>
+  <string id="FTSOpt009Hint" text="百科事典に掲載のない種類の兵士も変更対象とします。"/>
+  <string id="FTSOpt010" text="{NAME}の女性率 (%)"/>
+  <string id="FTSOpt011" text="{NAME}の女性率 (%)"/>
+  <string id="FTSPreset001" text="デフォルト"/>
+ </strings>
+</base>
