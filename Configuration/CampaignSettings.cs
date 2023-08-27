@@ -128,20 +128,20 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
 
             // General settings
             _builder.SetFolderName("FemaleTroopsSimplified");
-            _builder.CreateGroup("Global", groupBuider => groupBuider
+            _builder.CreateGroup("{=FTSOptG001}Global", groupBuider => groupBuider
                 .SetGroupOrder(0)
-                .AddInteger("DefaultCoverage", "Default Female Troop Percentage", 0, 100, new ProxyRef<int>(() => DefaultCoverage, x => DefaultCoverage = x), integerBuilder => integerBuilder
+                .AddInteger("DefaultCoverage", "{=FTSOpt001}Default Female Troop Percentage", 0, 100, new ProxyRef<int>(() => DefaultCoverage, x => DefaultCoverage = x), integerBuilder => integerBuilder
                     .SetOrder(0))
-                .AddBool("UseGenderNeutral", "Use Gender Neutral Troop Names", new ProxyRef<bool>(() => UseGenderNeutral, x => UseGenderNeutral = x), boolBuilder => boolBuilder
+                .AddBool("UseGenderNeutral", "{=FTSOpt002}Use Gender Neutral Troop Names", new ProxyRef<bool>(() => UseGenderNeutral, x => UseGenderNeutral = x), boolBuilder => boolBuilder
                     .SetOrder(1)
-                    .SetHintText("Only works when language is set to English."))
-                .AddBool("RandomizeEncyclopedia", "Randomize Troop Gender in the Encyclopedia", new ProxyRef<bool>(() => RandomizeEncyclopedia, x => RandomizeEncyclopedia = x), boolBuilder => boolBuilder
+                    .SetHintText("{=FTSOpt002Hint}Only works when language is set to English."))
+                .AddBool("RandomizeEncyclopedia", "{=FTSOpt003}Randomize Troop Gender in the Encyclopedia", new ProxyRef<bool>(() => RandomizeEncyclopedia, x => RandomizeEncyclopedia = x), boolBuilder => boolBuilder
                     .SetOrder(2)));
 
             // Culture settings
             _overrideManager.CreateGroups(_builder, 1);
 
-            _builder.CreatePreset("default", "Default", presetBuilder =>
+            _builder.CreatePreset("default", "{=FTSPreset001}Default", presetBuilder =>
             {
                 // General preset values
                 presetBuilder

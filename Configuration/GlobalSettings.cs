@@ -28,22 +28,22 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
             _builder.SetFolderName("FemaleTroopsSimplified");
             _builder.SetFormat("json");
 
-            _builder.CreateGroup("Custom Battle", groupBuider => groupBuider
+            _builder.CreateGroup("{=FTSOptG002}Custom Battle", groupBuider => groupBuider
                 .SetGroupOrder(0)
-                .AddInteger("CustomCoverage", "Custom Battle Female Percentage", 0, 100, new ProxyRef<int>(() => CustomCoverage, x => CustomCoverage = x), integerBuilder => integerBuilder
+                .AddInteger("CustomCoverage", "{=FTSOpt005}Custom Battle Female Percentage", 0, 100, new ProxyRef<int>(() => CustomCoverage, x => CustomCoverage = x), integerBuilder => integerBuilder
                     .SetOrder(0)));
 
-            _builder.CreateGroup("Campaign and Sandbox", groupBuilder => groupBuilder
+            _builder.CreateGroup("{=FTSOptG003}Campaign and Sandbox", groupBuilder => groupBuilder
                 .SetGroupOrder(1)
-                .AddBool("EnableMilitiaConfig", "Enable Militia Customization", new ProxyRef<bool>(() => EnableMilitiaConfig, x => EnableMilitiaConfig = x), boolBuilder => boolBuilder
+                .AddBool("EnableMilitiaConfig", "{=FTSOpt006}Enable Militia Customization", new ProxyRef<bool>(() => EnableMilitiaConfig, x => EnableMilitiaConfig = x), boolBuilder => boolBuilder
                     .SetOrder(0))
-                .AddBool("EnableCaravanConfig", "Enable Caravan Customization", new ProxyRef<bool>(() => EnableCaravanConfig, x => EnableCaravanConfig = x), boolBuilder => boolBuilder
+                .AddBool("EnableCaravanConfig", "{=FTSOpt007}Enable Caravan Customization", new ProxyRef<bool>(() => EnableCaravanConfig, x => EnableCaravanConfig = x), boolBuilder => boolBuilder
                     .SetOrder(1))
-                .AddBool("EnableGuardConfig", "Enable Guard Customization", new ProxyRef<bool>(() => EnableGuardConfig, x => EnableGuardConfig = x), boolBuilder => boolBuilder
+                .AddBool("EnableGuardConfig", "{=FTSOpt008}Enable Guard Customization", new ProxyRef<bool>(() => EnableGuardConfig, x => EnableGuardConfig = x), boolBuilder => boolBuilder
                     .SetOrder(2))
-                .AddBool("EnableHiddenConfig", "Enable Hidden Troops Customization", new ProxyRef<bool>(() => EnableHiddenConfig, x => EnableHiddenConfig = x), boolBuilder => boolBuilder
+                .AddBool("EnableHiddenConfig", "{=FTSOpt009}Enable Hidden Troops Customization", new ProxyRef<bool>(() => EnableHiddenConfig, x => EnableHiddenConfig = x), boolBuilder => boolBuilder
                     .SetOrder(3)
-                    .SetHintText("Customize troops not shown in encyclopedia.")));
+                    .SetHintText("{=FTSOpt009Hint}Customize troops not shown in encyclopedia.")));
 
             _builder.CreatePreset("default", "Default", presetBuilder => presetBuilder
                 .SetPropertyValue("CustomCoverage", CustomCoverage)
