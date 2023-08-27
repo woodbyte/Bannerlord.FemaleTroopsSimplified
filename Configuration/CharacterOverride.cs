@@ -1,8 +1,10 @@
 ﻿using MCM.Abstractions.FluentBuilder;
 using MCM.Common;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Localization;
 
 namespace Bannerlord.FemaleTroopsSimplified.Configuration
 {
@@ -57,10 +59,10 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
             string suffix = "";
             if (includeId) suffix = $" \u2039{_character.StringId}\u203A";
 
-            builder.CreateGroup($"\u200B{_parent}/Customize Troops/{ToString()}{suffix}", groupBuider => groupBuider
+            builder.CreateGroup($"{_parent}/{_parent.groupNameCustomizeTroops}/{ToString()}{suffix}", groupBuider => groupBuider
                 .SetGroupOrder(order)
-                .AddToggle($"{SettingId}Enabled", "Toggle", new ProxyRef<bool>(() => Enabled, x => Enabled = x), boolBuilder => { })
-                .AddInteger($"{SettingId}Coverage", $"{ToString()} Female Percentage", 0, 100, new ProxyRef<int>(() => Coverage, x => Coverage = x), integerBuilder => integerBuilder
+                .AddToggle($"{SettingId}Enabled", "{=FTSOpt004}Toggle", new ProxyRef<bool>(() => Enabled, x => Enabled = x), boolBuilder => { })
+                .AddInteger($"{SettingId}Coverage", new TextObject("{=FTSOpt010}{NAME} Female Percentage").SetTextVariable("NAME", ToString()).ToString(), 0, 100, new ProxyRef<int>(() => Coverage, x => Coverage = x), integerBuilder => integerBuilder
                     .SetOrder(0))
                 );
         }

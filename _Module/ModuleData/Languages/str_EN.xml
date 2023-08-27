@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base>
+ <tags>
+  <tag language="English"/>
+ </tags>
+ <strings>
+  <string id="FTSOptG001" text="Global"/>
+  <string id="FTSOptG002" text="Custom Battle"/>
+  <string id="FTSOptG003" text="Campaign and Sandbox"/>
+  <string id="FTSOptG004" text="{NAME}"/>
+  <string id="FTSOptG005" text="Enable Percentage Override"/>
+  <string id="FTSOptG006" text="Customize Troops"/>
+  <string id="FTSOpt001" text="Default Female Troop Percentage"/>
+  <string id="FTSOpt002" text="Use Gender Neutral Troop Names"/>
+  <string id="FTSOpt002Hint" text="Only works when language is set to English."/>
+  <string id="FTSOpt003" text="Randomize Troop Gender in the Encyclopedia"/>
+  <string id="FTSOpt004" text="Toggle"/>
+  <string id="FTSOpt005" text="Custom Battle Female Percentage"/>
+  <string id="FTSOpt006" text="Enable Militia Customization"/>
+  <string id="FTSOpt007" text="Enable Caravan Customization"/>
+  <string id="FTSOpt008" text="Enable Guard Customization"/>
+  <string id="FTSOpt009" text="Enable Hidden Troops Customization"/>
+  <string id="FTSOpt009Hint" text="Customize troops not shown in encyclopedia."/>
+  <string id="FTSOpt010" text="{NAME} Female Percentage"/>
+  <string id="FTSOpt011" text="{NAME} Female Troop Percentage"/>
+  <string id="FTSPreset001" text="Default"/>
+ </strings>
+</base>

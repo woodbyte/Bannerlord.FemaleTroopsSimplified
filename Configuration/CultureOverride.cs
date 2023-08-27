@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Localization;
 
 namespace Bannerlord.FemaleTroopsSimplified.Configuration
 {
@@ -52,21 +53,24 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
 
         public void CreateGroup(ISettingsBuilder builder, int order = 0)
         {
-            builder.CreateGroup($"\u200B{ToString()}", groupBuider => groupBuider
+            Random a = new();
+            TextObject groupName = new TextObject("{=FTSOptG004}{NAME}").SetTextVariable("NAME", _culture.Name);
+
+            builder.CreateGroup(groupName.ToString(), groupBuider => groupBuider
                 .SetGroupOrder(order)
-                .AddToggle($"{SettingId}Enabled", "Toggle", new ProxyRef<bool>(() => Enabled, x => Enabled = x), boolBuilder => { })
+                .AddToggle($"{SettingId}Enabled", "{=FTSOpt004}Toggle", new ProxyRef<bool>(() => Enabled, x => Enabled = x), boolBuilder => { })
                 );
 
-            builder.CreateGroup($"\u200B{ToString()}/Enable Percentage Override", groupBuider => groupBuider
+            builder.CreateGroup($"{ToString()}/{this.groupNamePercentageOverride}", groupBuider => groupBuider
                 .SetGroupOrder(0)
-                .AddToggle($"{SettingId}CoverageEnabled", "Toggle", new ProxyRef<bool>(() => CoverageEnabled, x => CoverageEnabled = x), boolBuilder => { })
-                .AddInteger($"{SettingId}CoverageValue", $"{ToString()} Female Troop Percentage", 0, 100, new ProxyRef<int>(() => CoverageValue, x => CoverageValue = x), integerBuilder => integerBuilder
+                .AddToggle($"{SettingId}CoverageEnabled", "{=FTSOpt004}Toggle", new ProxyRef<bool>(() => CoverageEnabled, x => CoverageEnabled = x), boolBuilder => { })
+                .AddInteger($"{SettingId}CoverageValue", new TextObject("{=FTSOpt011}{NAME} Female Troop Percentage").SetTextVariable("NAME", ToString()).ToString(), 0, 100, new ProxyRef<int>(() => CoverageValue, x => CoverageValue = x), integerBuilder => integerBuilder
                     .SetOrder(0))
                 );
 
-            builder.CreateGroup($"\u200B{ToString()}/Customize Troops", groupBuider => groupBuider
+            builder.CreateGroup($"{ToString()}/{this.groupNameCustomizeTroops}", groupBuider => groupBuider
                 .SetGroupOrder(1)
-                .AddToggle($"{SettingId}TroopsEnabled", "Toggle", new ProxyRef<bool>(() => TroopsEnabled, x => TroopsEnabled = x), boolBuilder => { })
+                .AddToggle($"{SettingId}TroopsEnabled", "{=FTSOpt004}Toggle", new ProxyRef<bool>(() => TroopsEnabled, x => TroopsEnabled = x), boolBuilder => { })
                 );
 
             var troopNames = _troopOverrides.ToList().ConvertAll((x) => x.ToString());
@@ -99,6 +103,8 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
         public override string ToString() => _culture.Name.ToString();
         public override int GetHashCode() => _culture.GetHashCode();
         public override bool Equals(object obj) => _culture.StringId == ((CultureOverride)obj)._culture.StringId;
+        public readonly TextObject groupNamePercentageOverride = new("{=FTSOptG005}Enable Percentage Override");
+        public readonly TextObject groupNameCustomizeTroops = new("{=FTSOptG006}Customize Troops");
         public int CompareTo(CultureOverride other)
         {
             if (_culture.IsMainCulture && !other._culture.IsMainCulture) return -1;
