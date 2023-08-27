@@ -103,8 +103,6 @@ namespace Bannerlord.FemaleTroopsSimplified.Configuration
         public override string ToString() => _culture.Name.ToString();
         public override int GetHashCode() => _culture.GetHashCode();
         public override bool Equals(object obj) => _culture.StringId == ((CultureOverride)obj)._culture.StringId;
-        public TextObject GetName() => this._culture.Name;
-
         public TextObject groupNamePercentageOverride = new("{=FTSOptG005}Enable Percentage Override");
         public TextObject groupNameCustomizeTroops = new("{=FTSOptG006}Customize Troops");
         public int CompareTo(CultureOverride other)
